@@ -22,12 +22,12 @@ async function run() {
       console.log('Database Connected');
       
       // Test DB connection
-    //   const testDatabase = client.db("test_DB");
-    //   const testCollection1 = testDatabase.collection("test_1");
+      const testDatabase = client.db("test_DB");
+      const testCollection1 = testDatabase.collection("test_1");
       
       // Real DB connection
-      const database = client.db("tibiyun_DB");
-      const tibiyunTestCollection = database.collection("test");
+    //   const database = client.db("tibiyun_DB");
+
   
       //CRUD API(s)
 
