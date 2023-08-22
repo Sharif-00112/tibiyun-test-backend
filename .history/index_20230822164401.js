@@ -73,7 +73,7 @@ async function run() {
       
     
     //GET search result API (all)
-    app.get('/searchResults', async(req, res) => {
+    app.get('/searchResults', verifyToken, async(req, res) => {
       const cursor = searchResultsCollection.find({});
       const result = await cursor.toArray();
       // res.send(result);
@@ -81,9 +81,9 @@ async function run() {
     })
 
     //GET search result API by email(single)
-    app.get('/selfSearchResults', async(req, res) => {
+    app.get('/selfSearchResults', verifyToken, async(req, res) => {
       const email = req.query.email;
-      const query = {userEmail: email};
+      const query = {email: email};
       const cursor = searchResultsCollection.find(query);
       const result = await cursor.toArray();
       // res.send(result);

@@ -83,7 +83,7 @@ async function run() {
     //GET search result API by email(single)
     app.get('/selfSearchResults', async(req, res) => {
       const email = req.query.email;
-      const query = {userEmail: email};
+      const query = {email: email};
       const cursor = searchResultsCollection.find(query);
       const result = await cursor.toArray();
       // res.send(result);
