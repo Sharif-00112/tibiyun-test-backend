@@ -25,7 +25,7 @@ async function run() {
       const database = client.db("tibiyun_DB");
       // const tibiyunTestCollection = database.collection("test");
       const userCollection = database.collection("users");
-      const searchResultsCollection = database.collection("searchResults");
+      const searchResultsCollection = database.collection("users");
   
       //CRUD API(s)
 
