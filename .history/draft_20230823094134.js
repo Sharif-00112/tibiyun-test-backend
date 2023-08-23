@@ -1,43 +1,33 @@
-const express = require('express');
+const express = require('express')
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-// const ObjectId = require('mongodb').ObjectId;
-// const WebSocket = require('ws');
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 const port = process.env.PORT || 3010;
 
 const app = express();
 
-// Initialize WebSocket server:
-// const wss = new WebSocket.Server({ server });
-// const wss = new WebSocket.Server({ server, port: 3031 });
-
-// const httpServer = app.listen(3020, () => {
-//   console.log(`WebSocket server app listening on port 3020`);
-// });
-// const wss = new WebSocket.Server({ server: httpServer });
-
-
-// Middleware
+//middleware
 app.use(cors());
 app.use(express.json());
 
-// Database connection info
+//database connection info
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mz96imw.mongodb.net/?retryWrites=true&w=majority`;
+// console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
-  try {
-    await client.connect();
-    console.log('Database Connected');
-
-    // DB connection
-    const database = client.db("tibiyun_DB");
-    // const tibiyunTestCollection = database.collection("test");
-    const userCollection = database.collection("users");
-    const searchResultsCollection = database.collection("searchResults");
-
-    //CRUD API(s)
+    try {
+      await client.connect();
+      console.log('Database Connected');
+      
+      // DB connection
+      const database = client.db("tibiyun_DB");
+      // const tibiyunTestCollection = database.collection("test");
+      const userCollection = database.collection("users");
+      const searchResultsCollection = database.collection("searchResults");
+  
+      //CRUD API(s)
 
     // POST an user to database (custom sign in)
     app.post('/users', async(req, res) => {
@@ -79,7 +69,8 @@ async function run() {
       const result = await searchResultsCollection.insertOne(searchResult);
       // console.log(result);
       res.json(result);
-    })   
+    })
+      
     
     //GET search result API (all)
     app.get('/searchResults', async(req, res) => {
@@ -98,49 +89,17 @@ async function run() {
       // res.send(result);
       res.json(result);
     })
-    
-    
-    // WebSocket server logic: 
-  // wss.on('connection', (socket) => {
-  //   console.log('Client connected to WebSocket server');
-
-  //   socket.on('message', (message) => {
-  //     const data = JSON.parse(message);
-  //     if (data.isAdmin) {
-  //       socket.isAdmin = true;
-  //     }
-  //   });
-
-  //   socket.on('close', () => {
-  //     console.log('Client disconnected from WebSocket server');
-  //   });
-  // });
-
-  // POST a search result to database
-  // app.post('/searchResults', async (req, res) => {
-  //   const searchResult = req.body;
-  //   const result = await searchResultsCollection.insertOne(searchResult);
-
-  //   // Send notification to connected clients (admins): 
-  //   wss.clients.forEach((client) => {
-  //     if (client.isAdmin) {
-  //       client.send(JSON.stringify({ type: 'new_entry', searchResult }));
-  //     }
-  //   });
-
-  //   res.json(result);
-  // });
-
-  } finally {
-    // await client.close();
+  
+    } finally {
+      // await client.close();
+    }
   }
-}
-run().catch(console.dir);
+  run().catch(console.dir);
 
 app.get('/', (req, res) => {
-res.send('Hello Tibiyun! Wish me luck! (Md Sharif Hossain)')
+  res.send('Hello Tibiyun! Wish me luck! (Md Sharif Hossain)')
 })
 
 app.listen(port, () => {
-console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`)
 })

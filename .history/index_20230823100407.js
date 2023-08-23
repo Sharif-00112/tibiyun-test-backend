@@ -1,22 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-// const ObjectId = require('mongodb').ObjectId;
-// const WebSocket = require('ws');
+const WebSocket = require('ws');
 require('dotenv').config();
-const port = process.env.PORT || 3010;
+const port = process.env.PORT || 3020;
 
 const app = express();
+const server = app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
 
-// Initialize WebSocket server:
+// Initialize WebSocket server: 
 // const wss = new WebSocket.Server({ server });
-// const wss = new WebSocket.Server({ server, port: 3031 });
-
-// const httpServer = app.listen(3020, () => {
-//   console.log(`WebSocket server app listening on port 3020`);
-// });
-// const wss = new WebSocket.Server({ server: httpServer });
-
 
 // Middleware
 app.use(cors());
@@ -74,12 +69,12 @@ async function run() {
     })
       
     // POST an search result to database 
-    app.post('/searchResults', async (req, res) => {
-      const searchResult = req.body;
-      const result = await searchResultsCollection.insertOne(searchResult);
-      // console.log(result);
-      res.json(result);
-    })   
+    // app.post('/searchResults', async (req, res) => {
+    //   const searchResult = req.body;
+    //   const result = await searchResultsCollection.insertOne(searchResult);
+    //   // console.log(result);
+    //   res.json(result);
+    // })   
     
     //GET search result API (all)
     app.get('/searchResults', async(req, res) => {
@@ -98,38 +93,31 @@ async function run() {
       // res.send(result);
       res.json(result);
     })
-    
-    
+
     // WebSocket server logic: 
-  // wss.on('connection', (socket) => {
-  //   console.log('Client connected to WebSocket server');
+    // wss.on('connection', (socket) => {
+    //   console.log('Client connected to WebSocket server');
 
-  //   socket.on('message', (message) => {
-  //     const data = JSON.parse(message);
-  //     if (data.isAdmin) {
-  //       socket.isAdmin = true;
-  //     }
-  //   });
+    //   socket.on('close', () => {
+    //     console.log('Client disconnected from WebSocket server');
+    //   });
+    // });
 
-  //   socket.on('close', () => {
-  //     console.log('Client disconnected from WebSocket server');
-  //   });
-  // });
+    // POST a search result to database
+    app.post('/searchResults', async (req, res) => {
+      const searchResult = req.body;
+      const result = await searchResultsCollection.insertOne(searchResult);
 
-  // POST a search result to database
-  // app.post('/searchResults', async (req, res) => {
-  //   const searchResult = req.body;
-  //   const result = await searchResultsCollection.insertOne(searchResult);
+      // Send notification to connected clients (admins): 
+      // wss.clients.forEach((client) => {
+      //   // Check if client is an admin (you need to have a method to identify admins)
+      //   if (client.isAdmin) {
+      //     client.send(JSON.stringify({ type: 'new_entry', searchResult }));
+      //   }
+      // });
 
-  //   // Send notification to connected clients (admins): 
-  //   wss.clients.forEach((client) => {
-  //     if (client.isAdmin) {
-  //       client.send(JSON.stringify({ type: 'new_entry', searchResult }));
-  //     }
-  //   });
-
-  //   res.json(result);
-  // });
+      res.json(result);
+    });
 
   } finally {
     // await client.close();
